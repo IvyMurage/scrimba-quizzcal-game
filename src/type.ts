@@ -12,3 +12,8 @@ export interface QuestionProps {
 }
 
 export type NewArrayQuestions = Omit<QuestionProps, 'incorrect_answers'> & {id :string}
+
+export type QuizProp = {
+    question: string,
+    answers: string[]
+}
