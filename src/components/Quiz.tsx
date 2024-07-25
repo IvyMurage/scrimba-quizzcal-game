@@ -21,7 +21,7 @@ function Quiz() {
         let ignore = false;
         (async () => {
             try {
-                const response = await fetch(`https://opentdb.com/api.php?amount=20&category=12`)
+                const response = await fetch(`https://opentdb.com/api.php?amount=5&category=12`)
                 if (!response.ok) {
                     throw new Error('Something went wrong')
                 }
@@ -48,7 +48,7 @@ function Quiz() {
         answers={question.answers}
     />)
     return (
-        <div>
+        <div className="max-w-lg overflow-y-scroll  text-sm  m-auto">
             {loading && <h1>Loading</h1>}
             {quizList}
         </div>

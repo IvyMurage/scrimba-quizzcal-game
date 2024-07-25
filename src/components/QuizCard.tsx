@@ -5,7 +5,7 @@ function QuizCard({ question, answers }: { question: string, answers: string[] }
 
     const id = useId()
     const answerList = answers.map(answer =>
-        <div className="border-1 border-gray-400 rounded-md px-3  ">
+        <div key={nanoid()} className="border-1 border-gray-400 text-xs rounded-md px-3 py-1  ">
             <input
                 onChange={() => console.log(answer)}
                 type='radio'
@@ -16,9 +16,9 @@ function QuizCard({ question, answers }: { question: string, answers: string[] }
             <label htmlFor={`${answer}-${id}`}>{decode(answer)}</label>
         </div>)
     return (
-        <div className="flex flex-col">
+        <div className="flex p-2 flex-col">
             <h3>{question}</h3>
-            <div className="flex flex-wrap gap-5">
+            <div className="flex py-2 flex-wrap gap-5">
                 {answerList}
 
             </div>
