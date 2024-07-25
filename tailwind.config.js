@@ -12,6 +12,10 @@ export default {
       colors: {
         primary: '#FFFFFF',
         secondary:'#0E103D'
+      }, 
+      borderWidth:{
+        1: '1px'
+
       }
     },
   },
