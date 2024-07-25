@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react"
 import QuizCard from "./QuizCard"
 import { QuestionProps, ResponseType } from "../type"
+import { nanoid } from "nanoid"
+import { decode } from "html-entities"
 
 function Quiz() {
 
     const [questions, setQuestions] = useState<QuestionProps[]>([])
     const [loading, setLoading] = useState(false)
+    const newQuestions = questions.map(({ incorrect_answers, question, ...rest }) => ({
+        id: nanoid(),
+        question: decode(question),
+        ...rest,
+        answers: [...incorrect_answers, rest.correct_answer]
+    }))
+
 
     useEffect(() => {
         setLoading(true);
@@ -31,28 +40,17 @@ function Quiz() {
         return () => {
             ignore = true
         }
-
     }, [])
-    console.log(questions)
-    console.log('loading:', loading)
+
+    const quizList = newQuestions.map(question => <QuizCard
+        key={question.id}
+        question={question.question}
+        answers={question.answers}
+    />)
     return (
         <div>
-            <QuizCard
-                question={'How many teeth does a person have?'}
-                answers={['1', '2', '3', '4', '5', '6']}
-            />
-            <QuizCard
-                question={'How many teeth does a person have?'}
-                answers={['1', '2', '3', '4', '5', '6']}
-            />
-            <QuizCard
-                question={'How many teeth does a person have?'}
-                answers={['1', '2', '3', '4', '5', '6']}
-            />
-            <QuizCard
-                question={'How many teeth does a person have?'}
-                answers={['1', '2', '3', '4', '5', '6']}
-            />
+            {loading && <h1>Loading</h1>}
+            {quizList}
         </div>
     )
 }

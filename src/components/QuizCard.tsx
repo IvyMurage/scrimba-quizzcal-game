@@ -1,6 +1,8 @@
+import { decode } from "html-entities"
 import { nanoid } from "nanoid"
 import { useId } from "react"
 function QuizCard({ question, answers }: { question: string, answers: string[] }) {
+
     const id = useId()
     const answerList = answers.map(answer =>
         <div className="border-1 border-gray-400 rounded-md px-3  ">
@@ -11,7 +13,7 @@ function QuizCard({ question, answers }: { question: string, answers: string[] }
                 key={nanoid()}
                 className="border-none hidden"
                 value={answer} />
-            <label htmlFor={`${answer}-${id}`}>{answer}</label>
+            <label htmlFor={`${answer}-${id}`}>{decode(answer)}</label>
         </div>)
     return (
         <div className="flex flex-col">
