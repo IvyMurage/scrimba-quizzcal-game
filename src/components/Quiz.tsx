@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react"
 import QuizCard from "./QuizCard"
-import { QuestionProps, ResponseType } from "../type"
+import { NewArrayQuestions, ResponseType } from "../type"
 import { nanoid } from "nanoid"
 import { decode } from "html-entities"
 
 function Quiz() {
 
-    const [questions, setQuestions] = useState<QuestionProps[]>([])
+    const [questions, setQuestions] = useState<NewArrayQuestions[]>([])
     const [loading, setLoading] = useState(false)
-    const newQuestions = questions.map(({ incorrect_answers, question, ...rest }) => ({
-        id: nanoid(),
-        question: decode(question),
-        ...rest,
-        answers: [...incorrect_answers, rest.correct_answer]
-    }))
+
 
 
     useEffect(() => {
@@ -27,7 +22,14 @@ function Quiz() {
                 }
                 const { results }: ResponseType = await response.json()
                 if (!ignore) {
-                    setQuestions(results)
+                    setQuestions(results.map(({ incorrect_answers, question, ...rest }) => ({
+                        id: nanoid(),
+                        question: decode(question),
+                        ...rest,
+                        answers: [...incorrect_answers, rest.correct_answer],
+                        isChecked: false,
+                        selectedAnswer: ''
+                    })))
                 }
             }
             catch (error) {
@@ -42,15 +44,35 @@ function Quiz() {
         }
     }, [])
 
-    const quizList = newQuestions.map(question => <QuizCard
-        key={question.id}
-        question={question.question}
-        answers={question.answers}
-    />)
+    function handleChange(
+        event: React.ChangeEvent<HTMLInputElement>,
+        id: string) {
+        const { value } = event.target
+
+        setQuestions(prevQuestions => prevQuestions.map(question => question.id === id ? ({ ...question, selectedAnswer: value }) : question))
+    }
+    const quizList = questions.map(question => {
+
+        return <QuizCard
+            selectedAnswer={question.selectedAnswer}
+            id={question.id}
+            handleChange={(event) => handleChange(event, question.id)}
+            key={question.id}
+            // isChecked={question.isChecked}
+            question={question.question}
+            answers={question.answers}
+        />
+    })
     return (
-        <div className="max-w-lg overflow-y-scroll  text-sm  m-auto">
-            {loading && <h1>Loading</h1>}
-            {quizList}
+        <div className="max-w-lg mt-10 overflow-y-scroll h-[80vh] text-sm  m-auto">
+            {loading ? <h1>Loading</h1> :
+                <>
+                    {quizList}
+                    <button className="m-auto mt-2 rounded-lg bg-secondary text-primary px-3 py-2">
+                        Check answers
+                    </button>
+                </>
+            }
         </div>
     )
 }

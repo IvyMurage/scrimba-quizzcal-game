@@ -11,9 +11,12 @@ export interface QuestionProps {
     incorrect_answers:string[]
 }
 
-export type NewArrayQuestions = Omit<QuestionProps, 'incorrect_answers'> & {id :string}
+export type NewArrayQuestions = Omit<QuestionProps, 'incorrect_answers'> & {id :string, isChecked: boolean, answers: string[], selectedAnswer: string}
 
 export type QuizProp = {
+    id:string,
+    handleChange: (event: React.ChangeEvent<HTMLInputElement>, id: string) => void
     question: string,
-    answers: string[]
+    answers: string[],
+    selectedAnswer: string
 }
