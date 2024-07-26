@@ -6,12 +6,13 @@ import { decode } from "html-entities"
 import ReactConfetti from "react-confetti"
 
 function Quiz() {
-
     const [questions, setQuestions] = useState<NewArrayQuestions[]>([])
     const [loading, setLoading] = useState(false)
     const [score, setScore] = useState(0)
     const [showResult, setResult] = useState(false)
     const [reset, setReset] = useState(0)
+
+
     useEffect(() => {
         setLoading(true);
         let ignore = false;

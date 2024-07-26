@@ -6,24 +6,27 @@ import { nanoid } from "nanoid"
 function QuizCard(
     { question, answers, handleChange, selectedAnswer, correct_answer, isChecked }: QuizProp) {
     const id = useId()
-
+    const decodedCorrectAnswer = decode(correct_answer)
+    const decodedSelectedAnswer = decode(selectedAnswer)
 
     function getColors(answer: string) {
-        if (correct_answer === answer) {
-            return { backgroundColor: '#94D7A2' }
-        } else if (answer === selectedAnswer) {
-            return { backgroundColor: '#F8BCBC' }
+        if (isChecked) {
+            if (decodedCorrectAnswer === answer) {
+                return { backgroundColor: '#94D7A2' }
+            } else if (answer === decodedSelectedAnswer) {
+                return { backgroundColor: '#F8BCBC' }
+            }
+        } else if (answer === decodedSelectedAnswer) {
+            return { backgroundColor: '#D6DBF5' }
+        } else {
+            return { backgroundColor: 'transparent' }
         }
     }
 
-
     const answerList = answers.map(answer => {
-
+        const decodedAnswer = decode(answer)
         return <div
-            style={isChecked ? getColors(answer) : answer === selectedAnswer ?
-                { backgroundColor: '#D6DBF5' } :
-                { backgroundColor: 'transparent' }
-            }
+            style={getColors(decodedAnswer)}
             key={nanoid()}
             className="border-1  border-gray-400 text-xs rounded-md px-3 py-1">
             <input
@@ -31,9 +34,10 @@ function QuizCard(
                 type='radio'
                 onChange={(event) => handleChange(event, id)}
                 className="border-none hidden"
-                value={answer}
+                value={decodedAnswer}
+                checked={decodedSelectedAnswer === decodedAnswer}
             />
-            <label htmlFor={`${answer}-${id}`}>{decode(answer)}</label>
+            <label htmlFor={`${answer}-${id}`}>{decodedAnswer}</label>
         </div>
     })
 
