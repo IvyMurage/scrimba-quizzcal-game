@@ -3,13 +3,14 @@ import QuizCard from "./QuizCard"
 import { NewArrayQuestions, ResponseType } from "../type"
 import { nanoid } from "nanoid"
 import { decode } from "html-entities"
+import ReactConfetti from "react-confetti"
 
 function Quiz() {
 
     const [questions, setQuestions] = useState<NewArrayQuestions[]>([])
     const [loading, setLoading] = useState(false)
-
-
+    const [score, setScore] = useState(0)
+    const [showResult, setResult] = useState(false)
 
     useEffect(() => {
         setLoading(true);
@@ -51,29 +52,59 @@ function Quiz() {
 
         setQuestions(prevQuestions => prevQuestions.map(question => question.id === id ? ({ ...question, selectedAnswer: value }) : question))
     }
-    const quizList = questions.map(question => {
 
+    function handleSubmit() {
+        let correct = 0
+        questions.forEach(question => {
+            if (question.selectedAnswer === question.correct_answer) {
+                correct = correct + 1
+            }
+        })
+        setQuestions(prevQuestions => prevQuestions.map(question => question.selectedAnswer === question.correct_answer ? ({ ...question, isChecked: true }) : question))
+        console.log(correct)
+        setScore(correct)
+        setResult(true)
+    }
+    const quizList = questions.map(question => {
         return <QuizCard
-            selectedAnswer={question.selectedAnswer}
             id={question.id}
-            handleChange={(event) => handleChange(event, question.id)}
             key={question.id}
-            // isChecked={question.isChecked}
-            question={question.question}
             answers={question.answers}
+            question={question.question}
+            isChecked={question.isChecked}
+            correct_answer={question.correct_answer}
+            selectedAnswer={question.selectedAnswer}
+            handleChange={(event) => handleChange(event, question.id)}
         />
     })
-    return (
-        <div className="max-w-lg mt-10 overflow-y-scroll h-[80vh] text-sm  m-auto">
+
+    function handleReset() {
+        setResult(false)
+        setScore(0)
+        setQuestions(prevQuestions => prevQuestions.map(question => ({ ...question, selectedAnswer: '', isChecked: false })))
+    }
+
+    return (<>
+        {score === 5 && <ReactConfetti />}
+        <div className="max-w-lg  mt-10 overflow-y-scroll h-[80vh] text-sm  m-auto">
             {loading ? <h1>Loading</h1> :
                 <>
                     {quizList}
-                    <button className="m-auto mt-2 rounded-lg bg-secondary text-primary px-3 py-2">
-                        Check answers
-                    </button>
+                    <div className="w-full  space-y-2 flex items-center flex-col ">
+                        {showResult && <h2 className="text-md text-ce font-bold">Your score is {score}</h2>}
+                        {showResult ?
+                            <button onClick={handleReset} className="m-auto mt-2 rounded-lg bg-secondary text-primary px-3 py-2">
+                                Play Again
+                            </button> :
+                            <button onClick={handleSubmit} className="m-auto mt-2 rounded-lg bg-secondary text-primary px-3 py-2">
+                                Check answers
+                            </button>
+                        }
+                    </div>
                 </>
             }
         </div>
+    </>
     )
 }
 

@@ -18,5 +18,7 @@ export type QuizProp = {
     handleChange: (event: React.ChangeEvent<HTMLInputElement>, id: string) => void
     question: string,
     answers: string[],
-    selectedAnswer: string
+    selectedAnswer: string,
+    correct_answer: string
+    isChecked: boolean
 }

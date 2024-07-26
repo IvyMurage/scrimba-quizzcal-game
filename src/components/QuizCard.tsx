@@ -3,15 +3,27 @@ import { useId } from "react"
 import { QuizProp } from "../type"
 import { nanoid } from "nanoid"
 
-function QuizCard({ question, answers, handleChange, selectedAnswer }: QuizProp) {
+function QuizCard(
+    { question, answers, handleChange, selectedAnswer, correct_answer, isChecked }: QuizProp) {
     const id = useId()
 
-    const answerList = answers.map(answer => {
-        const styles = {
-            backgroundColor: answer === selectedAnswer ? '#D6DBF5' : 'transparent'
+
+    function getColors(answer: string) {
+        if (correct_answer === answer) {
+            return { backgroundColor: '#94D7A2' }
+        } else if (answer === selectedAnswer) {
+            return { backgroundColor: '#F8BCBC' }
         }
+    }
+
+
+    const answerList = answers.map(answer => {
+
         return <div
-            style={styles}
+            style={isChecked ? getColors(answer) : answer === selectedAnswer ?
+                { backgroundColor: '#D6DBF5' } :
+                { backgroundColor: 'transparent' }
+            }
             key={nanoid()}
             className="border-1  border-gray-400 text-xs rounded-md px-3 py-1">
             <input
@@ -20,7 +32,6 @@ function QuizCard({ question, answers, handleChange, selectedAnswer }: QuizProp)
                 onChange={(event) => handleChange(event, id)}
                 className="border-none hidden"
                 value={answer}
-                checked={selectedAnswer === answer}
             />
             <label htmlFor={`${answer}-${id}`}>{decode(answer)}</label>
         </div>
@@ -32,7 +43,6 @@ function QuizCard({ question, answers, handleChange, selectedAnswer }: QuizProp)
             <div className="flex py-2 flex-wrap gap-5">
                 {answerList}
             </div>
-
         </div>
     )
 }
