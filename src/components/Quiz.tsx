@@ -65,6 +65,7 @@ function Quiz() {
         setScore(correct)
         setResult(true)
     }
+
     const quizList = questions.map(question => {
         return <QuizCard
             id={question.id}
@@ -87,7 +88,7 @@ function Quiz() {
     return (<>
         {score === 5 && <ReactConfetti />}
         <div className="max-w-lg  mt-10 overflow-y-scroll h-[80vh] text-sm  m-auto">
-            {loading ? <h1>Loading</h1> :
+            {loading ? <h1 className="text-md font-bold">Loading...</h1> :
                 <>
                     {quizList}
                     <div className="w-full  space-y-2 flex items-center flex-col ">
