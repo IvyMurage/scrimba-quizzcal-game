@@ -11,7 +11,7 @@ function Quiz() {
     const [loading, setLoading] = useState(false)
     const [score, setScore] = useState(0)
     const [showResult, setResult] = useState(false)
-
+    const [reset, setReset] = useState(0)
     useEffect(() => {
         setLoading(true);
         let ignore = false;
@@ -30,7 +30,7 @@ function Quiz() {
                         answers: [...incorrect_answers, rest.correct_answer],
                         isChecked: false,
                         selectedAnswer: ''
-                    })))
+                    })).sort(() => Math.random() - 0.5))
                 }
             }
             catch (error) {
@@ -43,7 +43,7 @@ function Quiz() {
         return () => {
             ignore = true
         }
-    }, [])
+    }, [reset])
 
     function handleChange(
         event: React.ChangeEvent<HTMLInputElement>,
@@ -61,7 +61,6 @@ function Quiz() {
             }
         })
         setQuestions(prevQuestions => prevQuestions.map(question => question.selectedAnswer === question.correct_answer ? ({ ...question, isChecked: true }) : question))
-        console.log(correct)
         setScore(correct)
         setResult(true)
     }
@@ -81,7 +80,7 @@ function Quiz() {
     function handleReset() {
         setResult(false)
         setScore(0)
-        setQuestions(prevQuestions => prevQuestions.map(question => ({ ...question, selectedAnswer: '', isChecked: false })))
+        setReset(prev => prev + 1)
     }
 
     return (<>
