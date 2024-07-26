@@ -61,7 +61,7 @@ function Quiz() {
                 correct = correct + 1
             }
         })
-        setQuestions(prevQuestions => prevQuestions.map(question => question.selectedAnswer === question.correct_answer ? ({ ...question, isChecked: true }) : question))
+        setQuestions(prevQuestions => prevQuestions.map(question => ({ ...question, isChecked: true })))
         setScore(correct)
         setResult(true)
     }
