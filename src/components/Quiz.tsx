@@ -28,10 +28,10 @@ function Quiz() {
                         id: nanoid(),
                         question: decode(question),
                         ...rest,
-                        answers: [...incorrect_answers, rest.correct_answer],
+                        answers: [...incorrect_answers, rest.correct_answer].sort(() => Math.random() - 0.5),
                         isChecked: false,
                         selectedAnswer: ''
-                    })).sort(() => Math.random() - 0.5))
+                    })))
                 }
             }
             catch (error) {
